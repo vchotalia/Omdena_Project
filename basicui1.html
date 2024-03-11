@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+    <!--link for bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+        crossorigin="anonymous">
+    <!--link for Fontawesome-->
+    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css"
+        rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <!--CSS Stylesheets-->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!--main heading-->
+    <header class="m-4 py-2 px-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <h1 class="main-heading"> Chatbot </h1>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!--container containing sidebar and chat-->
+    <div class="container">
+
+        <!-- Sidebar -->
+        <div class="container-fluid">
+            <div class="row">
+                <!-- Sidebar Column -->
+                <div class="col-md-3">
+                    <div class="sidebar p-3">
+                        <h3>Sidebar Content</h3>
+                        <p>Side content is here</p>
+                    </div>
+                </div>
+
+                <!--main content-->
+                <div class="col-md-8">
+
+                    <!--bot container-->
+                    <div class="card-body mx-2 my-1 p-4 bot-container">
+
+                        <!--flex box for chat-->
+                        <div class="d-flex align-items-baseline px-4 mb-4">
+
+                            <!--bot icon-->
+                            <div class="circle-icon">
+                                <i class="fa-solid fa-stethoscope"></i>
+                            </div>
+
+                            <!--bot text-->
+                            <div class="pe-2">
+                                <div class="card d-inline-block p-2 px-3 m-1">
+                                    hello
+                                </div>
+                            </div>
+
+                        </div><!--end of bot message-->
+
+                        <!--flex box for chat(user)-->
+                        <div class="d-flex flex-row-reverse align-items-baseline px-4 mb-4">
+
+                            <!--user icon-->
+                            <div class="circle-icon">
+                                <i class="fa-solid fa-user"></i>
+                            </div>
+
+                            <!--user text-->
+                            <div class="pe-2">
+                                <div class="card d-inline-block p-2 px-3 m-1">
+                                    hello I am fine how are you
+                                </div>
+                            </div>
+
+                        </div><!--end of user chat-->
+
+                    </div>
+
+                    <div class="bot-input">
+                        <div class="input-group">
+                            <input type="text" id="userMessage" class="form-control"
+                                placeholder="Write a message...">
+                            <button class="btn btn-light text-secondary" onclick="sendMessage()">
+                                <i class="far fa-paper-plane"></i>
+                            </button>
+                            <button class="btn btn-light text-secondary" onclick="toggleEmojis()">
+                                <i class="fas fa-smile"></i>
+                            </button>
+                            <div class="emoji-panel" style="display: none;">
+                                <button class="btn btn-light text-secondary" onclick="addEmoji('😊')">😊</button>
+                                <button class="btn btn-light text-secondary" onclick="addEmoji('😍')">😍</button>
+                                <button class="btn btn-light text-secondary" onclick="addEmoji('👍')">👍</button>
+                                <!-- Add more emojis as needed -->
+                            </div>
+                            <button class="btn btn-light text-secondary" onclick="startVoiceRecognition()">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function sendMessage() {
+            // Get the user's message
+            var userMessage = document.getElementById("userMessage").value;
+
+            // Create a new user message element
+            var userMessageElement = document.createElement("div");
+            userMessageElement.className = "d-flex flex-row-reverse align-items-baseline px-4 mb-4";
+            userMessageElement.innerHTML = `
+            <div class="circle-icon">
+                <i class="fa-solid fa-user"></i>
+            </div>
+            <div class="pe-2">
+                <div class="card d-inline-block p-2 px-3 m-1">
+                    ${userMessage}
+                </div>
+            </div>
+        `;
+
+            // Append the user message element to the chat container
+            var chatContainer = document.querySelector(".bot-container");
+            chatContainer.appendChild(userMessageElement);
+
+            // Clear the input field
+            document.getElementById("userMessage").value = "";
+        }
+
+        function toggleEmojis() {
+            var emojiPanel = document.querySelector(".emoji-panel");
+            emojiPanel.style.display = (emojiPanel.style.display === 'none') ? 'block' : 'none';
+        }
+
+        function addEmoji(emoji) {
+            var userMessageInput = document.getElementById("userMessage");
+            userMessageInput.value += emoji;
+        }
+
+        function startVoiceRecognition() {
+            var recognition = new webkitSpeechRecognition();
+
+            recognition.onresult = function(event) {
+                var last = event.results.length - 1;
+                var userMessage = event.results[last][0].transcript;
+                document.getElementById("userMessage").value = userMessage;
+            }
+
+            recognition.start();
+        }
+    </script>
+
+</body>
+
+</html>
